@@ -18,6 +18,8 @@ import {
 const Customizer = () => {
   const snap = useSnapshot(state);
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const [file, setFile] = useState('');
   const [prompt, setPrompt] = useState('');
   const [generatingImg, setGeneratingImg] = useState(false);
@@ -62,15 +64,18 @@ const Customizer = () => {
     try {
       setGeneratingImg(true);
 
-      const response = await fetch('http://localhost:8080/api/v1/dalle', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt,
-        }),
-      });
+      const response = await fetch(
+        'https://product3d-rahul4dev.onrender.com/api/v1/dalle',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -132,7 +137,10 @@ const Customizer = () => {
                     key={tab.name}
                     tab={tab}
                     handleClick={() => {
-                      setActiveEditorTab(tab.name);
+                      setIsOpen(!isOpen);
+                      if (!isOpen) {
+                        setActiveEditorTab(tab.name);
+                      } else setActiveEditorTab('');
                     }}
                   />
                 ))}
@@ -180,16 +188,3 @@ const Customizer = () => {
   );
 };
 export default Customizer;
-
-{
-  /* Download button */
-}
-{
-  /* <button className="download-btn" onClick={downloadCanvasToImage}>
-        <img
-          src={download}
-          alt="download_image"
-          className="w-3/5 h-3/5 object-contain"
-        />
-      </button> */
-}
